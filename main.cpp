@@ -5,12 +5,12 @@ using namespace std;
 
 string gen_keystream(string key, string msg) {
     string keystream;
-    int flag = 0;
+    int non_alphabetic = 0;
     for(int i = 0; i < msg.size(); i++) {
         if((int)msg[i] >= (int)'A' &&  (int)msg[i] <= (int)'Z')
-            keystream.push_back(key[(i-flag) % key.size()]);
+            keystream.push_back(key[(i-non_alphabetic) % key.size()]);
         else
-            flag++;
+            non_alphabetic++;
     }
     cout << "KEYSTREAM: ";
     cout << keystream << endl;
@@ -36,16 +36,16 @@ string get_decrypt() {
     string key = insert_key();
     string encrypted = insert_message();
     string keystream = gen_keystream(key, encrypted);
-    
     string decrypted;
-    int flag = 0;
+
+    int non_alphabetic = 0;
     for(int i = 0; i < encrypted.size(); i++) {
         if((int)encrypted[i] >= (int)'A' &&  (int)encrypted[i] <= (int)'Z') {
-            char c_new = (char)(((int) ((encrypted[i] - 'A')-(keystream[i-flag] - 'A')+26)) % 26 + 'A');
+            char c_new = (char)(((int) ((encrypted[i] - 'A')-(keystream[i-non_alphabetic] - 'A')+26)) % 26 + 'A');
             decrypted.push_back(c_new);
         }else {
             decrypted.push_back(encrypted[i]);
-            flag++;
+            non_alphabetic++;
         }
     }
     cout << decrypted << endl;
@@ -53,21 +53,20 @@ string get_decrypt() {
     return key;
 }
 
-
 string get_encrypt() {
     string key = insert_key();
     string original = insert_message();
     string keystream = gen_keystream(key, original);
-    
     string encrypted;
-    int flag = 0;
+
+    int non_alphabetic = 0;
     for(int i = 0; i < original.size(); i++) {
         if((int)original[i] >= (int)'A' &&  (int)original[i] <= (int)'Z') {
-            char c_new = (char)(((int) ((original[i] - 'A')+(keystream[i-flag] - 'A'))) % 26 + 'A' );
+            char c_new = (char)(((int) ((original[i] - 'A')+(keystream[i-non_alphabetic] - 'A'))) % 26 + 'A' );
             encrypted.push_back(c_new);
         }else {
             encrypted.push_back(original[i]);
-            flag++;
+            non_alphabetic++;
         }
     }
     cout << encrypted << endl;
